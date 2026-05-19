@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BitFunded — The BTC Scalping Prop Firm</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07030a;
+  --surface: #0d0510;
+  --surface2: #120818;
+  --border: #1e0a18;
+  --red: #b41428;
+  --red-bright: #d41830;
+  --red-dim: rgba(180,20,40,0.12);
+  --red-glow: rgba(180,20,40,0.06);
+  --text: #f0eaf2;
+  --text-dim: rgba(240,234,242,0.55);
+  --text-muted: rgba(240,234,242,0.25);
+  --muted: #4a1a28;
+  --accent: #b41428;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(180,20,40,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180,20,40,0.03) 1px, transparent 1px);
+  background-size: 70px 70px;
+  pointer-events:none;
+  z-index:0;
+}
+
+body::after {
+  content:'';
+  position:fixed;
+  top:-300px; left:50%;
+  transform:translateX(-50%);
+  width:1000px; height:1000px;
+  background:radial-gradient(circle, rgba(180,20,40,0.1) 0%, transparent 60%);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* NAV */
+nav {
+  position:fixed;
+  top:0; left:0; right:0;
+  z-index:100;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:20px 56px;
+  background:rgba(7,3,10,0.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+
+.nav-logo {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:20px;
+  letter-spacing:5px;
+  display:flex;
+  align-items:center;
+  gap:2px;
+}
+
+.nav-logo .bit { color: var(--red-bright); }
+.nav-logo .sep { color: rgba(240,234,242,0.15); margin:0 1px; }
+.nav-logo .funded { color: var(--text); opacity:0.85; }
+
+.nav-right {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:rgba(240,234,242,0.2);
+}
+
+.pulse {
+  width:6px; height:6px;
+  border-radius:50%;
+  background:var(--red-bright);
+  box-shadow:0 0 8px var(--red);
+  animation:blink 2s infinite;
+}
+
+@keyframes blink {
+  0%,100%{ opacity:1; }
+  50%{ opacity:0.4; }
+}
+
+/* HERO */
+.hero {
+  position:relative;
+  z-index:1;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:140px 24px 100px;
+}
+
+.eyebrow {
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  color:var(--red-bright);
+  margin-bottom:32px;
+  opacity:0;
+  animation:rise 0.9s ease 0.2s forwards;
+}
+
+.hero-logo {
+  margin-bottom:24px;
+  opacity:0;
+  animation:rise 0.9s ease 0.35s forwards;
+}
+
+/* SVG Logo inline */
+.logo-svg {
+  width: 80px;
+  height: 80px;
+}
+
+.hero-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(70px,13vw,150px);
+  letter-spacing:4px;
+  line-height:0.88;
+  margin-bottom:4px;
+  opacity:0;
+  animation:rise 0.9s ease 0.5s forwards;
+}
+
+.hero-title .red { color:var(--red-bright); }
+.hero-title .ghost { color:rgba(240,234,242,0.55); }
+
+.hero-rule {
+  width:1px;
+  height:48px;
+  background:linear-gradient(to bottom, var(--red), transparent);
+  margin:20px auto;
+  opacity:0;
+  animation:rise 0.9s ease 0.65s forwards;
+}
+
+.hero-tagline {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(16px,2.5vw,26px);
+  letter-spacing:8px;
+  color:var(--text-dim);
+  margin-bottom:24px;
+  opacity:0;
+  animation:rise 0.9s ease 0.75s forwards;
+}
+
+.hero-desc {
+  font-size:15px;
+  line-height:1.9;
+  color:var(--text-dim);
+  max-width:480px;
+  margin:0 auto 48px;
+  font-weight:300;
+  opacity:0;
+  animation:rise 0.9s ease 0.85s forwards;
+}
+
+@keyframes rise {
+  from{ opacity:0; transform:translateY(16px); }
+  to{   opacity:1; transform:translateY(0); }
+}
+
+.badge {
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  border:1px solid rgba(180,20,40,0.35);
+  background:var(--red-dim);
+  border-radius:2px;
+  padding:10px 22px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--red-bright);
+  margin-bottom:52px;
+  opacity:0;
+  animation:rise 0.9s ease 0.95s forwards;
+}
+
+/* EMAIL */
+.email-wrap {
+  width:100%;
+  max-width:500px;
+  margin:0 auto;
+  opacity:0;
+  animation:rise 0.9s ease 1.05s forwards;
+}
+
+.email-label {
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:rgba(240,234,242,0.25);
+  margin-bottom:12px;
+  text-align:left;
+}
+
+.email-row {
+  display:flex;
+  border:1px solid rgba(180,20,40,0.3);
+  border-radius:2px;
+  overflow:hidden;
+  background:rgba(13,5,16,0.8);
+  transition:border-color 0.2s, box-shadow 0.2s;
+}
+
+.email-row:focus-within {
+  border-color:rgba(180,20,40,0.7);
+  box-shadow:0 0 28px rgba(180,20,40,0.1);
+}
+
+.email-input {
+  flex:1;
+  padding:15px 20px;
+  background:none;
+  border:none;
+  outline:none;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  color:var(--text);
+  letter-spacing:1px;
+}
+
+.email-input::placeholder { color:rgba(240,234,242,0.2); }
+
+.email-btn {
+  padding:15px 28px;
+  background:var(--red);
+  border:none;
+  cursor:pointer;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:14px;
+  letter-spacing:2px;
+  color:#fff;
+  transition:background 0.2s;
+  white-space:nowrap;
+}
+
+.email-btn:hover { background:var(--red-bright); }
+
+.email-note {
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  letter-spacing:1px;
+  color:rgba(240,234,242,0.18);
+  margin-top:10px;
+  text-align:center;
+}
+
+.success {
+  display:none;
+  text-align:center;
+  padding:16px;
+  background:rgba(180,20,40,0.08);
+  border:1px solid rgba(180,20,40,0.25);
+  border-radius:2px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  letter-spacing:2px;
+  color:var(--red-bright);
+  text-transform:uppercase;
+}
+
+/* DIVIDER */
+.div-line {
+  position:relative;
+  z-index:1;
+  max-width:800px;
+  margin:0 auto;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--border),transparent);
+}
+
+/* FEATURES */
+.features {
+  position:relative;
+  z-index:1;
+  max-width:920px;
+  margin:80px auto;
+  padding:0 24px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:56px;
+  align-items:start;
+}
+
+.features-left .tag {
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--red-bright);
+  margin-bottom:20px;
+}
+
+.features-left h2 {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:52px;
+  letter-spacing:2px;
+  line-height:1;
+  color:var(--text);
+  margin-bottom:20px;
+}
+
+.features-left h2 span { color:var(--red-bright); }
+
+.features-left p {
+  font-size:14px;
+  line-height:1.9;
+  color:var(--text-dim);
+  font-weight:300;
+}
+
+.features-right {
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.feat {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-left:2px solid var(--red);
+  padding:18px 20px;
+  transition:background 0.2s, box-shadow 0.2s;
+}
+
+.feat:hover {
+  background:var(--surface2);
+  box-shadow:0 0 24px rgba(180,20,40,0.06);
+}
+
+.feat-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:15px;
+  letter-spacing:2px;
+  color:var(--text);
+  margin-bottom:6px;
+}
+
+.feat-text {
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  line-height:1.7;
+  color:var(--text-dim);
+}
+
+/* STATS */
+.stats {
+  position:relative;
+  z-index:1;
+  max-width:920px;
+  margin:0 auto 80px;
+  padding:0 24px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);
+}
+
+.stat {
+  background:var(--surface);
+  padding:36px 24px;
+  text-align:center;
+}
+
+.stat-n {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:52px;
+  letter-spacing:2px;
+  color:var(--red-bright);
+  line-height:1;
+  margin-bottom:10px;
+}
+
+.stat-l {
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--text-dim);
+}
+
+/* FOOTER */
+footer {
+  position:relative;
+  z-index:1;
+  border-top:1px solid var(--border);
+  padding:28px 56px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:16px;
+}
+
+.foot-logo {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:16px;
+  letter-spacing:4px;
+  color:var(--red);
+  opacity:0.5;
+}
+
+.foot-links { display:flex; gap:24px; }
+
+.foot-link {
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:rgba(240,234,242,0.2);
+  text-decoration:none;
+  transition:color 0.2s;
+}
+
+.foot-link:hover { color:var(--red-bright); }
+
+.foot-copy {
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  letter-spacing:1px;
+  color:rgba(240,234,242,0.15);
+}
+
+@media(max-width:700px){
+  nav{ padding:16px 20px; }
+  .features{ grid-template-columns:1fr; gap:32px; }
+  .stats{ grid-template-columns:1fr; }
+  footer{ flex-direction:column; align-items:flex-start; padding:24px 20px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <span class="bit">BIT</span>
+    <span class="sep">/</span>
+    <span class="funded">FUNDED</span>
+  </div>
+  <div class="nav-right">
+    <div class="pulse"></div>
+    Building · Dubai, UAE
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="eyebrow">Bitcoin-Only Prop Firm — Coming Soon</div>
+
+  <!-- Inline SVG Logo -->
+  <div class="hero-logo">
+    <svg class="logo-svg" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Outer ring -->
+      <circle cx="40" cy="40" r="37" stroke="#b41428" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.4"/>
+      <!-- Inner ring -->
+      <circle cx="40" cy="40" r="28" stroke="#b41428" stroke-width="1" opacity="0.3"/>
+      <!-- Bitcoin B shape -->
+      <path d="M32 22 L32 58" stroke="#b41428" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M32 22 L44 22 Q52 22 52 30 Q52 38 32 38" stroke="#b41428" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M32 38 L46 38 Q55 38 55 46 Q55 58 32 58" stroke="#d41830" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <!-- Small accent lines -->
+      <line x1="28" y1="26" x2="32" y2="26" stroke="#b41428" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="28" y1="54" x2="32" y2="54" stroke="#b41428" stroke-width="1.5" stroke-linecap="round"/>
+      <!-- Corner marks -->
+      <path d="M6 18 L6 6 L18 6" stroke="#b41428" stroke-width="1" opacity="0.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M62 6 L74 6 L74 18" stroke="#b41428" stroke-width="1" opacity="0.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M6 62 L6 74 L18 74" stroke="#b41428" stroke-width="1" opacity="0.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M62 74 L74 74 L74 62" stroke="#b41428" stroke-width="1" opacity="0.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+  </div>
+
+  <h1 class="hero-title">
+    <span class="red">BIT</span><br>
+    <span class="ghost">FUNDED</span>
+  </h1>
+
+  <div class="hero-rule"></div>
+  <div class="hero-tagline">Trade Our Capital. Keep The Profit.</div>
+
+  <p class="hero-desc">
+    A Bitcoin-only prop firm built by a scalper, for scalpers.
+    One asset. One edge. No distractions.
+    Prove your skill on the challenge — get funded, earn higher splits.
+  </p>
+
+  <div class="badge">
+    <div class="pulse"></div>
+    Launch Incoming — Join The Waitlist
+  </div>
+
+  <div class="email-wrap">
+    <div class="email-label">Be first to know when we launch</div>
+    <div class="email-row" id="emailRow">
+      <input class="email-input" type="email" id="emailInput" placeholder="your@email.com" />
+      <button class="email-btn" onclick="submit()">Notify Me</button>
+    </div>
+    <div class="success" id="successMsg">✓ You're on the list — see you at launch</div>
+    <div class="email-note">No spam. One email when we go live.</div>
+  </div>
+</section>
+
+<div class="div-line"></div>
+
+<section class="features">
+  <div class="features-left">
+    <div class="tag">What We're Building</div>
+    <h2>Built For<br><span>Scalpers</span></h2>
+    <p>
+      Most prop firms are built for swing traders.
+      BitFunded is different — challenge rules, risk parameters,
+      and evaluation criteria designed specifically around
+      short timeframe BTC execution.
+      <br><br>
+      Built in Dubai. Launching soon.
+    </p>
+  </div>
+  <div class="features-right">
+    <div class="feat">
+      <div class="feat-title">BTC Only</div>
+      <div class="feat-text">One market. Know it completely. No multi-asset distraction or noise.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-title">Scalping Rules</div>
+      <div class="feat-text">Challenge structure built around fast execution, not swing trading constraints.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-title">Higher Profit Splits</div>
+      <div class="feat-text">Pass the challenge. Get real capital. Keep the majority of what you make.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-title">Education Layer</div>
+      <div class="feat-text">Liquidation methodology, risk framework, and scalping principles built in.</div>
+    </div>
+  </div>
+</section>
+
+<div class="div-line"></div>
+
+<section class="stats">
+  <div class="stat">
+    <div class="stat-n">BTC</div>
+    <div class="stat-l">Only Asset Traded</div>
+  </div>
+  <div class="stat">
+    <div class="stat-n">HIGH</div>
+    <div class="stat-l">Profit Splits</div>
+  </div>
+  <div class="stat">
+    <div class="stat-n">DXB</div>
+    <div class="stat-l">Built In Dubai</div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-logo">BITFUNDED</div>
+  <div class="foot-links">
+    <a href="https://x.com/scottiescalps" class="foot-link" target="_blank">X</a>
+    <a href="https://instagram.com/scottiescalps" class="foot-link" target="_blank">Instagram</a>
+    <a href="https://scottiescalps.com" class="foot-link" target="_blank">Scottie Scalps</a>
+  </div>
+  <div class="foot-copy">© 2025 BitFunded · Dubai, UAE</div>
+</footer>
+
+<script>
+function submit(){
+  const input=document.getElementById('emailInput');
+  const val=input.value.trim();
+  if(!val||!val.includes('@')){ input.style.color='rgba(212,24,48,0.8)'; input.focus(); return; }
+  const list=JSON.parse(localStorage.getItem('bf_list')||'[]');
+  list.push({email:val,date:new Date().toISOString()});
+  localStorage.setItem('bf_list',JSON.stringify(list));
+  document.getElementById('emailRow').style.display='none';
+  document.getElementById('successMsg').style.display='block';
+}
+document.getElementById('emailInput').addEventListener('keydown',e=>{ if(e.key==='Enter') submit(); });
+</script>
+</body>
+</html>
